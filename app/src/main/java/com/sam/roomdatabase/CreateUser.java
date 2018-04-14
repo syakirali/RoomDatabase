@@ -1,5 +1,7 @@
 package com.sam.roomdatabase;
 
+import android.arch.persistence.room.Room;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -33,11 +35,21 @@ public class CreateUser extends AppCompatActivity{
         email = findViewById(R.id.email);
         button = findViewById(R.id.button);
 
+        final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production")
+                .allowMainThreadQueries()
+                .build();
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO: 4/14/2018 Save to database
                 Log.d(TAG, "onClick: firstName: " + firstName.getText().toString());
+
+                db.userDao().insertAll(new User(
+                        firstName.getText().toString(), lastName.getText().toString(),email.getText().toString()
+                ));
+
+                startActivity(new Intent(CreateUser.this, MainActivity.class));
             }
         });
     }

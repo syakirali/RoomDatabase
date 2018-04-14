@@ -1,5 +1,6 @@
 package com.sam.roomdatabase;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     FloatingActionButton fab;
-    ArrayList<User> users;
+//    ArrayList<User> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +35,18 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view);
 
-        users = new ArrayList<>();
+//        users = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
-            User user = new User("Daniel #" + i, "Malone", "danieljmalone@example.com");
-            users.add(user);
-        }
+//        for (int i = 0; i < 10; i++) {
+//            User user = new User("Daniel #" + i, "Malone", "danieljmalone@example.com");
+//            users.add(user);
+//        }
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production")
+                .allowMainThreadQueries()
+                .build();
+
+        List<User> users = db.userDao().getAllUsers();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new UserAdapter(users);
